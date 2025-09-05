@@ -32,18 +32,23 @@ export class Star {
 	profileImageUrl: string;
 }
 
+/**
+ * 표를 행사한 것이 아니라
+ * 어떤 종류의 투표인지를 나타냄
+ * */
 @Entity('Vote')
 export class Vote {
 	@PrimaryGeneratedColumn()
 	id: bigint;
 
-	@ManyToOne(() => Member)
-	@JoinColumn({ name: 'member_id' })
-	member: Member;
+	@Column({ nullable: false })
+	name: string;
 
-	@ManyToOne(() => Star)
-	@JoinColumn({ name: 'star_id' })
-	star: Star;
+	@Column()
+	startDt: Date;
+
+	@Column()
+	endDt: Date;
 }
 
 @Entity('VotingLog')
@@ -54,6 +59,10 @@ export class VotingLog {
 	@ManyToOne(() => Member)
 	@JoinColumn({ name: 'member_id' })
 	member: Member;
+
+	@ManyToOne(() => Vote)
+	@JoinColumn({ name: 'vote_id' })
+	vote: Vote;
 
 	@ManyToOne(() => Star)
 	@JoinColumn({ name: 'star_id' })

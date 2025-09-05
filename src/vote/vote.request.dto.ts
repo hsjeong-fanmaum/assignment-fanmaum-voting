@@ -1,6 +1,6 @@
 export class VoteSearchDto {
-	page?: bigint;
-	size?: bigint;
+	page?: number;
+	size?: number;
 	status?: string;
 	search?: string;
 }

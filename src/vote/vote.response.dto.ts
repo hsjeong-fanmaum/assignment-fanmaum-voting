@@ -2,16 +2,16 @@ export class VoteSearchResultListDto {
 	result: VoteSingleResultDto[];
 }
 export class VoteSingleResultDto {
-	id: bigint;
+	id: number;
 	name: string;
 	status: string;
-	remainingDays: bigint;
+	remainingDays: number;
 	stars: StarSingleResultWithoutIdDto[];
 }
 export class StarSingleResultWithoutIdDto {
 	name: string;
 	profileImageUrl: string;
-	votes: bigint;
+	votes: number;
 }
 export class StarSearchResultListDto {
 	stars: StarSingleResultWithRankDto[];

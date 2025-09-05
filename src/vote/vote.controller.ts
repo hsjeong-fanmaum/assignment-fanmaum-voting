@@ -12,10 +12,10 @@ export class VoteController {
 	constructor(private readonly voteService: VoteService) {}
 
 	@Get()
-	voteListInfo(
+	async voteListInfo(
 		@Req()
 		request: VoteSearchDto,
-	): VoteSearchResultListDto {
+	): Promise<VoteSearchResultListDto> {
 		return this.voteService.voteListInfo(request);
 	}
 

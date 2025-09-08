@@ -3,6 +3,7 @@ import { DoVoteDto, StarSearchDto, VoteSearchDto } from './vote.request.dto';
 import {
 	StarSearchResultListDto,
 	StarSingleResultWithoutIdDto,
+	StarSingleResultWithRankDto,
 	VoteSearchResultListDto,
 	VoteSingleResultDto,
 } from './vote.response.dto';
@@ -46,9 +47,8 @@ export class VoteService {
 					},
 				},
 				where: {
-					name: request.search
-						? { contains: request.search }
-						: undefined,
+					name: { contains: request.search },
+					//당연한 소리일 수도 있는데, undefined 설정을 안 해도 되네요?
 					startDt:
 						request.status && request.status !== 'ENDED'
 							? request.status === 'NOT_STARTED'
@@ -131,8 +131,6 @@ export class VoteService {
 								_count: 'desc',
 							},
 						},
-						skip: 0,
-						take: 2,
 					},
 				},
 				where: {
@@ -184,7 +182,54 @@ export class VoteService {
 			.then(() => Promise.resolve());
 	}
 
-	searchInfo(vote: bigint, request: StarSearchDto): StarSearchResultListDto {
-		throw new Error('Not implemented yet. Parameter: ' + vote);
+	async starSearchInfo(
+		vote: number,
+		request: StarSearchDto,
+	): Promise<StarSearchResultListDto> {
+		return prisma.votingTarget
+			.findMany({
+				select: {
+					id: true,
+					Star: true,
+					_count: {
+						select: {
+							VotingLog: {
+								where: {
+									alive: 1,
+								},
+							},
+						},
+					},
+				},
+				where: {
+					vote_id: +vote,
+					Star: {
+						name: {
+							contains: request.q,
+						},
+					},
+				},
+				orderBy: {
+					VotingLog: {
+						_count: 'desc',
+					},
+				},
+			})
+			.then(
+				(value) =>
+					<StarSearchResultListDto>{
+						stars: value.map(
+							(eachStarValue) =>
+								<StarSingleResultWithRankDto>{
+									id: eachStarValue.Star.id,
+									voteStarId: eachStarValue.id,
+									name: eachStarValue.Star.name,
+									profileImageUrl:
+										eachStarValue.Star.profileImageUrl,
+									votes: eachStarValue._count.VotingLog,
+								},
+						),
+					},
+			);
 	}
 }

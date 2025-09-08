@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { VoteService } from './vote.service';
 import { DoVoteDto, StarSearchDto, VoteSearchDto } from './vote.request.dto';
 import {
@@ -33,10 +33,10 @@ export class VoteController {
 	}
 
 	@Get('/:vote/stars')
-	searchInfo(
-		@Param('vote') vote: bigint,
-		@Req() request: StarSearchDto,
-	): StarSearchResultListDto {
-		return this.voteService.searchInfo(vote, request);
+	async starSearchInfo(
+		@Param('vote') vote: number,
+		@Query() request: StarSearchDto,
+	): Promise<StarSearchResultListDto> {
+		return this.voteService.starSearchInfo(vote, request);
 	}
 }

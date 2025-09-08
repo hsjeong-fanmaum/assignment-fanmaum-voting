@@ -19,9 +19,9 @@ export class StarSearchResultListDto {
 	stars: StarSingleResultWithRankDto[];
 }
 export class StarSingleResultWithRankDto {
-	id: bigint;
+	id: number;
+	voteStarId: number;
 	name: string;
 	profileImageUrl: string;
-	votes: bigint;
-	rank: bigint;
+	votes: number;
 }

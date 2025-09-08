@@ -8,5 +8,5 @@ export class DoVoteDto {
 	target: number;
 }
 export class StarSearchDto {
-	q: string;
+	q?: string;
 }

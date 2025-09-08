@@ -1,4 +1,8 @@
-import { Body, Injectable } from '@nestjs/common';
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common';
 import { DoVoteDto, StarSearchDto, VoteSearchDto } from './vote.request.dto';
 import {
 	StarSearchResultListDto,
@@ -139,7 +143,9 @@ export class VoteService {
 			})
 			.then((value) => {
 				if (value === null)
-					throw new Error('Cannot find vote with this id: ' + vote);
+					throw new NotFoundException(
+						'Cannot find vote with this id: ' + vote,
+					);
 				return <VoteSingleResultDto>{
 					id: value.id,
 					name: value.name,
@@ -171,15 +177,34 @@ export class VoteService {
 			});
 	}
 
-	async doVote(vote: bigint, @Body() body: DoVoteDto): Promise<void> {
-		return prisma.votingLog
-			.create({
-				data: {
-					member_id: null,
-					voting_target_id: +body.target,
+	async doVote(vote: number, body: DoVoteDto): Promise<void> {
+		const now = new Date();
+		return prisma.votingTarget
+			.count({
+				where: {
+					id: body.target,
+					vote_id: +vote,
+					Vote: {
+						startDt: { lte: now },
+						endDt: { gt: now },
+					},
 				},
 			})
-			.then(() => Promise.resolve());
+			.then((value) => {
+				if (value !== 1)
+					throw new BadRequestException(
+						'현재 진행중인 투표가 존재하지 않습니다.',
+					);
+			})
+			.then(() => {
+				return prisma.votingLog.create({
+					data: {
+						member_id: null,
+						voting_target_id: +body.target,
+					},
+				});
+			})
+			.then(() => Promise.resolve()); //return값 지워주기
 	}
 
 	async starSearchInfo(

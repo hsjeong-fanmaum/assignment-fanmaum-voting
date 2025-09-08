@@ -16,33 +16,42 @@ model Member {
 }
 
 model Star {
-  id              Int         @id @default(autoincrement())
-  name            String      @db.VarChar(255)
-  profileImageUrl String      @db.VarChar(255)
-  VotingLog       VotingLog[]
+  id              Int            @id @default(autoincrement())
+  name            String         @db.VarChar(255)
+  profileImageUrl String         @db.VarChar(255)
+  VotingTarget    VotingTarget[]
 }
 
 model Vote {
-  id        Int         @id @default(autoincrement())
-  name      String      @db.VarChar(255)
-  startDt   DateTime    @db.DateTime(0)
-  endDt     DateTime    @db.DateTime(0)
-  VotingLog VotingLog[]
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  startDt      DateTime       @db.DateTime(0)
+  endDt        DateTime       @db.DateTime(0)
+  VotingTarget VotingTarget[]
 }
 
 model VotingLog {
-  id        Int      @id @default(autoincrement())
-  alive     Int      @default(1) @db.TinyInt
-  voted     DateTime @default(now()) @db.DateTime(6)
-  modified  DateTime @default(now()) @db.DateTime(6)
-  member_id Int?
-  star_id   Int?
-  vote_id   Int?
-  Member    Member?  @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_b913b61dae38d608b01fc795e75")
-  Star      Star?    @relation(fields: [star_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c6fde83e48ebed4abc9bd08ade6")
-  Vote      Vote?    @relation(fields: [vote_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f3964b599e8c32765d795f741cb")
+  id               Int          @id @default(autoincrement())
+  alive            Int          @default(1) @db.TinyInt
+  voted            DateTime     @default(now()) @db.DateTime(6)
+  modified         DateTime     @default(now()) @db.DateTime(6)
+  member_id        Int?
+  voting_target_id Int
+  VotingTarget     VotingTarget @relation(fields: [voting_target_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_2e9795840e0d6b065b409f3ff64")
+  Member           Member?      @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_b913b61dae38d608b01fc795e75")
 
   @@index([member_id], map: "FK_b913b61dae38d608b01fc795e75")
-  @@index([star_id], map: "FK_c6fde83e48ebed4abc9bd08ade6")
-  @@index([vote_id], map: "FK_f3964b599e8c32765d795f741cb")
+  @@index([voting_target_id], map: "FK_2e9795840e0d6b065b409f3ff64")
+}
+
+model VotingTarget {
+  id        Int         @id @default(autoincrement())
+  vote_id   Int
+  star_id   Int
+  VotingLog VotingLog[]
+  Vote      Vote        @relation(fields: [vote_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_7a5d6c10d9a907925446dcd5421")
+  Star      Star        @relation(fields: [star_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_b9e96ba8bf9dc7f1efed6399d63")
+
+  @@index([vote_id], map: "FK_7a5d6c10d9a907925446dcd5421")
+  @@index([star_id], map: "FK_b9e96ba8bf9dc7f1efed6399d63")
 }

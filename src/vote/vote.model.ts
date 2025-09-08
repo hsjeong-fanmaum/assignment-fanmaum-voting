@@ -51,6 +51,20 @@ export class Vote {
 	endDt: Date;
 }
 
+@Entity('VotingTarget')
+export class VotingTarget {
+	@PrimaryGeneratedColumn()
+	id: bigint;
+
+	@ManyToOne(() => Vote, { nullable: false })
+	@JoinColumn({ name: 'vote_id' })
+	vote: Vote;
+
+	@ManyToOne(() => Star, { nullable: false })
+	@JoinColumn({ name: 'star_id' })
+	star: Star;
+}
+
 @Entity('VotingLog')
 export class VotingLog {
 	@PrimaryGeneratedColumn()
@@ -60,13 +74,9 @@ export class VotingLog {
 	@JoinColumn({ name: 'member_id' })
 	member: Member;
 
-	@ManyToOne(() => Vote)
-	@JoinColumn({ name: 'vote_id' })
-	vote: Vote;
-
-	@ManyToOne(() => Star)
-	@JoinColumn({ name: 'star_id' })
-	star: Star;
+	@ManyToOne(() => VotingTarget, { nullable: false })
+	@JoinColumn({ name: 'voting_target_id' })
+	votingTarget: VotingTarget;
 
 	@Column({ default: true })
 	alive: boolean;

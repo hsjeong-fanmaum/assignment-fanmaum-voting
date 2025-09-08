@@ -9,6 +9,7 @@ export class VoteSingleResultDto {
 	stars: StarSingleResultWithoutIdDto[];
 }
 export class StarSingleResultWithoutIdDto {
+	id: number;
 	name: string;
 	profileImageUrl: string;
 	votes: number;

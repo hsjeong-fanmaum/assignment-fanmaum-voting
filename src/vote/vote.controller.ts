@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { VoteService } from './vote.service';
 import { DoVoteDto, StarSearchDto, VoteSearchDto } from './vote.request.dto';
 import {
@@ -13,7 +13,7 @@ export class VoteController {
 
 	@Get()
 	async voteListInfo(
-		@Req()
+		@Query()
 		request: VoteSearchDto,
 	): Promise<VoteSearchResultListDto> {
 		return this.voteService.voteListInfo(request);

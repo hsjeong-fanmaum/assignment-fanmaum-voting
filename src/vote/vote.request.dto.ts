@@ -5,7 +5,7 @@ export class VoteSearchDto {
 	search?: string;
 }
 export class DoVoteDto {
-	target: bigint;
+	target: number;
 }
 export class StarSearchDto {
 	q: string;

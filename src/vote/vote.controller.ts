@@ -20,12 +20,15 @@ export class VoteController {
 	}
 
 	@Get('/:vote')
-	voteInfo(@Param('vote') vote: bigint): VoteSingleResultDto {
+	async voteInfo(@Param('vote') vote: number): Promise<VoteSingleResultDto> {
 		return this.voteService.voteInfo(vote);
 	}
 
 	@Post('/:vote')
-	doVote(@Param('vote') vote: bigint, @Body() body: DoVoteDto): void {
+	async doVote(
+		@Param('vote') vote: bigint,
+		@Body() body: DoVoteDto,
+	): Promise<void> {
 		return this.voteService.doVote(vote, body);
 	}
 

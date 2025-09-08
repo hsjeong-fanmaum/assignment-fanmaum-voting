@@ -24,6 +24,7 @@ export class VoteService {
 				include: {
 					VotingTarget: {
 						select: {
+							id: true,
 							Star: true,
 							_count: {
 								select: {
@@ -90,6 +91,8 @@ export class VoteService {
 										(votingResultValue) =>
 											<StarSingleResultWithoutIdDto>{
 												id: votingResultValue.Star.id,
+												voteStarId:
+													votingResultValue.id,
 												name: votingResultValue.Star
 													.name,
 												profileImageUrl:
@@ -105,14 +108,80 @@ export class VoteService {
 			);
 	}
 
-	voteInfo(vote: bigint): VoteSingleResultDto {
-		throw new Error('Not implemented yet. Parameter: ' + vote);
+	async voteInfo(vote: number): Promise<VoteSingleResultDto> {
+		return prisma.vote
+			.findUnique({
+				include: {
+					VotingTarget: {
+						select: {
+							id: true,
+							Star: true,
+							_count: {
+								select: {
+									VotingLog: {
+										where: {
+											alive: 1,
+										},
+									},
+								},
+							},
+						},
+						orderBy: {
+							VotingLog: {
+								_count: 'desc',
+							},
+						},
+						skip: 0,
+						take: 2,
+					},
+				},
+				where: {
+					id: +vote,
+				},
+			})
+			.then((value) => {
+				if (value === null)
+					throw new Error('Cannot find vote with this id: ' + vote);
+				return <VoteSingleResultDto>{
+					id: value.id,
+					name: value.name,
+					status:
+						value.startDt > new Date()
+							? 'NOT_STARTED'
+							: value.endDt < new Date()
+								? 'ENDED'
+								: 'RUNNING',
+					remainingDays: Math.floor(
+						(value.endDt.valueOf() - Date.now()) /
+							(1000 * 60 * 60 * 24),
+					),
+					stars: value.VotingTarget.filter(
+						(votingResultValue) =>
+							votingResultValue._count.VotingLog !== 0,
+					).map(
+						(votingResultValue) =>
+							<StarSingleResultWithoutIdDto>{
+								id: votingResultValue.Star.id,
+								voteStarId: votingResultValue.id,
+								name: votingResultValue.Star.name,
+								profileImageUrl:
+									votingResultValue.Star.profileImageUrl,
+								votes: votingResultValue._count.VotingLog,
+							},
+					),
+				};
+			});
 	}
 
-	doVote(vote: bigint, @Body() body: DoVoteDto): void {
-		throw new Error(
-			'Not implemented yet. Parameter: ' + vote + ', ' + body.target,
-		);
+	async doVote(vote: bigint, @Body() body: DoVoteDto): Promise<void> {
+		return prisma.votingLog
+			.create({
+				data: {
+					member_id: null,
+					voting_target_id: +body.target,
+				},
+			})
+			.then(() => Promise.resolve());
 	}
 
 	searchInfo(vote: bigint, request: StarSearchDto): StarSearchResultListDto {

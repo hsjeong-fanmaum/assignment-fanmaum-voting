@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+//Spring에는 뭐든 camelCase로 작성하면 DB에는 snake_case로 자동 변환이 되긴 했음
+model User {
+  id         BigInt      @id @default(autoincrement()) @map("id") ///PK (숫자)
+  loginId    String      @unique @map("login_id") @db.VarChar(16) ///로그인용 ID (문자열)
+  password   String      @map("password") @db.VarChar(48) ///(암호화된) 비밀번호
+  //48자 제한이 근거는 없는데 괜찮나? spring에서도 Bcrypt hashing 결과의 길이를 확인한 적은 없음
+  votingLogs VotingLog[]
+
+  @@map("user")
+}
+
+model Vote { //1표를 말하는 게 아니라 투표(선거)를 말함. 근데 1표를 행사하는 것과 표를 행사하는 대상을 둘 다 투표하고 부르긴 하네요.
+  id         BigInt      @id @default(autoincrement()) @map("id") /// PK
+  name       String      @map("name") @db.VarChar(64) //적당히 큰 숫자
+  startAt    DateTime    @map("start_at") @db.DateTime(6)
+  endAt      DateTime    @map("end_at") @db.DateTime(6)
+  votingLogs VotingLog[]
+
+  @@map("vote")
+}
+
+model Star {
+  id              BigInt      @id @default(autoincrement()) @map("id") /// PK
+  name            String      @map("name") @db.VarChar(48) //근데 팬마음에 등장하는 연예인 중 영어 이름이 존재하긴 하나요? 없으면 4~5까지 줄여도 괜찮을 것 같습니다
+  profileImageUrl String?     @map("profile_image_url") @db.VarChar(511) ///S3에 있는 연예인의 이미지 링크를 생각해 만든 것
+  votingLogs      VotingLog[]
+
+  @@map("star")
+}
+
+model VotingLog { //투표 기록(1표를 행사한 기록)
+  id        BigInt   @id @default(autoincrement()) @map("id") /// PK
+  userId    BigInt?  @map("user_id")
+  voteId    BigInt   @map("vote_id")
+  starId    BigInt   @map("star_id")
+  ///표가 살아있는지 확인(요구사항을 보니 표를 무효화할 필요도 있을 것 같아 추가)
+  valid     Boolean  @default(true) @map("valid")
+  ///반드시 투표를 진행한 시점이 됨
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  ///표가 살아있다면 투표를 진행한 시점, 투표를 취소했다면 취소한 시점
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(6)
+  user      User?    @relation(fields: [userId], references: [id])
+  vote      Vote     @relation(fields: [voteId], references: [id])
+  star      Star     @relation(fields: [starId], references: [id])
+
+  @@map("voting_log")
+}

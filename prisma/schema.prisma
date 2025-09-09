@@ -14,20 +14,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//Spring에는 뭐든 camelCase로 작성하면 DB에는 snake_case로 자동 변환이 되긴 했음
+
 model User {
-  id         BigInt      @id @default(autoincrement()) @map("id") ///PK (숫자)
-  loginId    String      @unique @map("login_id") @db.VarChar(16) ///로그인용 ID (문자열)
-  password   String      @map("password") @db.VarChar(48) ///(암호화된) 비밀번호
-  //48자 제한이 근거는 없는데 괜찮나? spring에서도 Bcrypt hashing 결과의 길이를 확인한 적은 없음
+  id         BigInt      @id @default(autoincrement()) @map("id")
+  ///로그인용 ID (문자열)
+  loginId    String      @unique @map("login_id") @db.VarChar(16)
+  ///(암호화된) 비밀번호
+  //48자 제한은 단순히 Bcrypt 결과 문자열의 길이를 예상해 작성한 것
+  password   String      @map("password") @db.VarChar(48)
   votingLogs VotingLog[]
 
   @@map("user")
 }
 
-model Vote { //1표를 말하는 게 아니라 투표(선거)를 말함. 근데 1표를 행사하는 것과 표를 행사하는 대상을 둘 다 투표하고 부르긴 하네요.
-  id         BigInt      @id @default(autoincrement()) @map("id") /// PK
-  name       String      @map("name") @db.VarChar(64) //적당히 큰 숫자
+///1표를 말하는 게 아니라 투표(선거)를 말함.
+model Vote {
+  id         BigInt      @id @default(autoincrement()) @map("id")
+  //64자 제한은 다른 의도는 없고 적당히 큰 숫자임
+  name       String      @map("name") @db.VarChar(64)
   startAt    DateTime    @map("start_at") @db.DateTime(6)
   endAt      DateTime    @map("end_at") @db.DateTime(6)
   votingLogs VotingLog[]
@@ -36,16 +40,18 @@ model Vote { //1표를 말하는 게 아니라 투표(선거)를 말함. 근데 
 }
 
 model Star {
-  id              BigInt      @id @default(autoincrement()) @map("id") /// PK
-  name            String      @map("name") @db.VarChar(48) //근데 팬마음에 등장하는 연예인 중 영어 이름이 존재하긴 하나요? 없으면 4~5까지 줄여도 괜찮을 것 같습니다
-  profileImageUrl String?     @map("profile_image_url") @db.VarChar(511) ///S3에 있는 연예인의 이미지 링크를 생각해 만든 것
+  id              BigInt      @id @default(autoincrement()) @map("id")
+  //근데 팬마음에 등장하는 연예인 중 영어 이름이 존재하긴 하나요? 없으면 글자수 제한을 4~5까지 줄여도 괜찮을 것 같습니다
+  name            String      @map("name") @db.VarChar(48)
+  ///S3에 있는 연예인의 이미지 링크를 생각해 만든 것
+  profileImageUrl String?     @map("profile_image_url") @db.VarChar(511)
   votingLogs      VotingLog[]
 
   @@map("star")
 }
-
-model VotingLog { //투표 기록(1표를 행사한 기록)
-  id        BigInt   @id @default(autoincrement()) @map("id") /// PK
+///투표 기록(1표를 행사한 기록)
+model VotingLog {
+  id        BigInt   @id @default(autoincrement()) @map("id")
   userId    BigInt?  @map("user_id")
   voteId    BigInt   @map("vote_id")
   starId    BigInt   @map("star_id")

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Prisma } from '../../generated/prisma';
+import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { searchVoteResultDto } from './vote.response.dto';
 
 @Injectable()
 export class VoteService {
@@ -10,13 +11,14 @@ export class VoteService {
    * 투표 검색(투표 목록 조회) 진행
    * 각 투표의 1, 2위 검색은 다른 검색 로직 통해서 진행
    */
-  async voteSearch(
+  async searchVote(
     page?: number,
     size?: number,
     status?: string,
     search?: string,
-  ) {
-    const pageSize = size || 10;
+  ): Promise<searchVoteResultDto[]> {
+    const pageSize = size ?? 10;
+    const pageNumber = (page ?? 1) - 1;
     //await은 경고가 발생하기도 하고 이미 이 자체로 promise를 반환하고 있기 때문에 제외
     return this.prisma.vote.findMany({
       select: {
@@ -29,7 +31,7 @@ export class VoteService {
         name: { contains: search },
         ...this.dateSearchOptions(status),
       },
-      skip: ((page || 1) - 1) * pageSize,
+      skip: pageNumber * pageSize,
       take: pageSize,
     });
   }

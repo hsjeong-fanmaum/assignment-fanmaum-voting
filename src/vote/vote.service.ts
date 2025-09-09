@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { searchVoteResultDto } from './vote.response.dto';
+import { VoteStatus } from './vote.enum';
 
 @Injectable()
 export class VoteService {
@@ -14,7 +15,7 @@ export class VoteService {
   async searchVote(
     page?: number,
     size?: number,
-    status?: string,
+    status?: VoteStatus,
     search?: string,
   ): Promise<searchVoteResultDto[]> {
     const pageSize = size ?? 10;
@@ -24,8 +25,8 @@ export class VoteService {
       select: {
         id: true,
         name: true,
-        startAt: true,
-        endAt: true,
+        startedAt: true,
+        endedAt: true,
       },
       where: {
         name: { contains: search },
@@ -42,20 +43,23 @@ export class VoteService {
    * @returns 검색 옵션(prisma의 where절에 넣을 수 있는 옵션)
    * @private
    */
-  private dateSearchOptions(status?: string): Prisma.VoteWhereInput {
-    if (status === 'NOT_STARTED')
-      return {
-        startAt: { gt: new Date() },
-      };
-    else if (status === 'RUNNING')
-      return {
-        startAt: { lte: new Date() },
-        endAt: { gt: new Date() },
-      };
-    else if (status === 'ENDED')
-      return {
-        endAt: { lte: new Date() },
-      };
-    else return {}; //undefined 또는 예상하지 못한 type일 때 검색조건 없음
+  private dateSearchOptions(status?: VoteStatus): Prisma.VoteWhereInput {
+    switch (status) {
+      case VoteStatus.NOT_STARTED:
+        return {
+          startedAt: { gt: new Date() },
+        };
+      case VoteStatus.RUNNING:
+        return {
+          startedAt: { lte: new Date() },
+          endedAt: { gt: new Date() },
+        };
+      case VoteStatus.ENDED:
+        return {
+          endedAt: { lte: new Date() },
+        };
+      default:
+        return {}; //undefined 또는 예상하지 못한 type일 때 검색조건 없음
+    }
   }
 }

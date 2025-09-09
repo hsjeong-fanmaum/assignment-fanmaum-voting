@@ -1,6 +1,6 @@
 export class searchVoteResultDto{
   id: bigint;
   name: string;
-  startAt: Date;
-  endAt: Date;
+  startedAt: Date;
+  endedAt: Date;
 }

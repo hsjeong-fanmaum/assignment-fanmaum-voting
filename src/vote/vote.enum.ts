@@ -1,5 +1,5 @@
 export enum VoteStatus {
-  NOT_STARTED,
-  RUNNING,
-  ENDED,
+  NOT_STARTED = 'NOT_STARTED',
+  RUNNING = 'RUNNING',
+  ENDED = 'ENDED',
 }

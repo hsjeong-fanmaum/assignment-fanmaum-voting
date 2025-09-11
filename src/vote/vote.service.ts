@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { VoteResultDto } from './vote.response.dto';
+import { LeaderboardResultDto, VoteResultDto } from './vote.response.dto';
 import { VoteStatus } from './vote.enum';
 
 @Injectable()
@@ -75,16 +75,14 @@ export class VoteService {
         id: id,
       },
     });
-    if (findResult) return findResult;
-    else throw new NotFoundException(`id: ${id} not found`);
+    if (findResult) {
+      return findResult;
+    } else {
+      throw new NotFoundException(`id: ${id} not found`);
+    }
   }
 
-  async getLeaderboardOfVote(voteId: bigint): Promise<
-    {
-      starId: bigint;
-      _count: { starId: number };
-    }[] //한 화면에 코드를 담기 위해 합쳤을 뿐이라 이후 별도 클래스로 분리 예정
-  > {
+  async getLeaderboardOfVote(voteId: bigint): Promise<LeaderboardResultDto[]> {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     return this.prisma.votingLog.groupBy({

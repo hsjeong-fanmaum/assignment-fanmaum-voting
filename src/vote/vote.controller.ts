@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { VoteService } from './vote.service';
-import { VoteResultDto } from './vote.response.dto';
+import { LeaderboardResultDto, VoteResultDto } from './vote.response.dto';
 import { SearchVoteRequestDto } from './vote.request.dto';
 import { ParseBigIntPipe } from '../common/parse-big-int-pipe.service';
 
@@ -22,5 +22,12 @@ export class VoteController {
     @Param('voteId', ParseBigIntPipe) voteId: bigint,
   ): Promise<VoteResultDto> {
     return this.voteService.getVoteById(voteId);
+  }
+
+  @Get('/:voteId/leaderboard')
+  async getLeaderboardOfVote(
+    @Param('voteId', ParseBigIntPipe) voteId: bigint,
+  ): Promise<LeaderboardResultDto[]> {
+    return this.voteService.getLeaderboardOfVote(voteId);
   }
 }

@@ -101,4 +101,14 @@ export class VoteService {
       },
     });
   }
+
+  async executeVote(voteId: bigint, starId: bigint): Promise<void> {
+    await this.prisma.votingLog.create({
+      data: {
+        voteId: voteId,
+        starId: starId,
+      },
+    });
+    // return 값 없음
+  }
 }

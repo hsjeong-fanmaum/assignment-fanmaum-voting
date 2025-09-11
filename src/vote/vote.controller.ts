@@ -1,7 +1,10 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { VoteService } from './vote.service';
 import { LeaderboardResultDto, VoteResultDto } from './vote.response.dto';
-import { SearchVoteRequestDto } from './vote.request.dto';
+import {
+  ExecuteVoteRequestDto,
+  SearchVoteRequestDto,
+} from './vote.request.dto';
 import { ParseBigIntPipe } from '../common/parse-big-int-pipe.service';
 
 @Controller('vote')
@@ -29,5 +32,13 @@ export class VoteController {
     @Param('voteId', ParseBigIntPipe) voteId: bigint,
   ): Promise<LeaderboardResultDto[]> {
     return this.voteService.getLeaderboardOfVote(voteId);
+  }
+
+  @Post('/:voteId/execute-vote')
+  async executeVote(
+    @Param('voteId', ParseBigIntPipe) voteId: bigint,
+    @Body() { starId }: ExecuteVoteRequestDto,
+  ): Promise<void> {
+    await this.voteService.executeVote(voteId, starId);
   }
 }

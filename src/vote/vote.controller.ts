@@ -1,9 +1,10 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { VoteService } from './vote.service';
 import { VoteStatus } from './vote.enum';
 import { VoteResultDto } from './vote.response.dto';
 import { ApiQuery } from '@nestjs/swagger';
 import { SearchVoteRequestDto } from './vote.request.dto';
+import { ParseBigIntPipe } from '../common/parse-big-int-pipe.service';
 
 @Controller('vote')
 export class VoteController {
@@ -19,5 +20,13 @@ export class VoteController {
     { page, size, status, search }: SearchVoteRequestDto,
   ): Promise<VoteResultDto[]> {
     return this.voteService.searchVote(page, size, status, search);
+  }
+
+  @Get('/:voteId')
+  // 이제서야 드는 생각인데, async를 붙일 이유는 없을 것 같은데 맞나요?
+  async getVoteById(
+    @Param('voteId', ParseBigIntPipe) voteId: bigint,
+  ): Promise<VoteResultDto> {
+    return this.voteService.getVoteById(voteId);
   }
 }

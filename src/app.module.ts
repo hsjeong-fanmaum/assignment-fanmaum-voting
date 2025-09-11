@@ -4,9 +4,10 @@ import { AppService } from './app.service';
 import { VoteModule } from './vote/vote.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { CommonModule } from './common/common.module';
+import { StarModule } from './star/star.module';
 
 @Module({
-  imports: [VoteModule, PrismaModule, CommonModule],
+  imports: [VoteModule, PrismaModule, CommonModule, StarModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,8 +1,17 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { VoteService } from './vote.service';
 import { LeaderboardResultDto, VoteResultDto } from './vote.response.dto';
 import {
-  ExecuteVoteRequestDto,
+  AddVoteRequestDto,
+  AddVotingLogRequestDto,
   SearchVoteRequestDto,
 } from './vote.request.dto';
 import { ParseBigIntPipe } from '../common/parse-big-int-pipe.service';
@@ -35,10 +44,20 @@ export class VoteController {
   }
 
   @Post('/:voteId/execute-vote')
-  async executeVote(
+  async addVotingLog(
     @Param('voteId', ParseBigIntPipe) voteId: bigint,
-    @Body() { starId }: ExecuteVoteRequestDto,
+    @Body() { starId }: AddVotingLogRequestDto,
   ): Promise<void> {
-    await this.voteService.executeVote(voteId, starId);
+    await this.voteService.addVotingLog(voteId, starId);
+  }
+
+  // 테스트 시 데이터 삽입을 위한 API
+  @Post('/new')
+  async addVote(@Body() addVoteDto: AddVoteRequestDto): Promise<void> {
+    //이 API를 실제로 사용해서는 안 됨
+    if (process.env.NODE_ENV === 'prod') {
+      throw new ForbiddenException();
+    }
+    await this.voteService.addVote(addVoteDto);
   }
 }

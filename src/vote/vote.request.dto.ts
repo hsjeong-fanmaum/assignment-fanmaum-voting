@@ -28,9 +28,21 @@ export class SearchVoteRequestDto {
   search?: string;
 }
 
-export class ExecuteVoteRequestDto {
+export class AddVotingLogRequestDto {
   @ApiProperty()
   @Type(() => BigInt)
   // ... 근데 여기에 validation 안 둬도 되나요? BigInt 변환 안되면 400 Bad Request가 반환되더라고요.
   starId: bigint;
+}
+
+export class AddVoteRequestDto {
+  @ApiProperty()
+  @IsString()
+  name: string;
+  @ApiProperty()
+  @Type(() => Date)
+  startedAt: Date;
+  @ApiProperty()
+  @Type(() => Date)
+  endedAt: Date;
 }

@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { LeaderboardResultDto, VoteResultDto } from './vote.response.dto';
 import { VoteStatus } from './vote.enum';
+import { AddVoteRequestDto } from './vote.request.dto';
 
 @Injectable()
 export class VoteService {
@@ -102,7 +103,8 @@ export class VoteService {
     });
   }
 
-  async executeVote(voteId: bigint, starId: bigint): Promise<void> {
+  //투표 실행(addVotingLog)
+  async addVotingLog(voteId: bigint, starId: bigint): Promise<void> {
     await this.prisma.votingLog.create({
       data: {
         voteId: voteId,
@@ -110,5 +112,12 @@ export class VoteService {
       },
     });
     // return 값 없음
+  }
+
+  // 테스트 시 데이터 삽입을 위한 로직
+  async addVote(addVoteDto: AddVoteRequestDto): Promise<void> {
+    await this.prisma.vote.create({
+      data: addVoteDto,
+    });
   }
 }

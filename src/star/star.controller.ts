@@ -1,8 +1,17 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { StarService } from './star.service';
 import { ParseBigIntPipe } from '../common/parse-big-int-pipe.service';
 import { GetStarResultDto } from './star.response.dto';
 import { ApiQuery } from '@nestjs/swagger';
+import { AddStarRequestDto } from './star.request.dto';
 
 @Controller('star')
 export class StarController {
@@ -20,5 +29,15 @@ export class StarController {
     @Param('id', ParseBigIntPipe) id: bigint,
   ): Promise<GetStarResultDto> {
     return this.starService.getStarById(id);
+  }
+
+  // 테스트 시 데이터 삽입을 위한 API
+  @Post('/new')
+  async addStar(@Body() addStarDto: AddStarRequestDto): Promise<void> {
+    //이 API를 실제로 사용해서는 안 됨
+    if (process.env.NODE_ENV === 'prod') {
+      throw new ForbiddenException();
+    }
+    return this.starService.addStar(addStarDto);
   }
 }

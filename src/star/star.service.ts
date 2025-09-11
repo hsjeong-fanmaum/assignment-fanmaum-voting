@@ -18,11 +18,10 @@ export class StarService {
         id: id,
       },
     });
-    if (findResult) {
-      return findResult;
-    } else {
+    if (!findResult) {
       throw new NotFoundException(`id: ${id} not found`);
     }
+    return findResult;
   }
 
   async searchStar(keyword?: string): Promise<GetStarResultDto[]> {

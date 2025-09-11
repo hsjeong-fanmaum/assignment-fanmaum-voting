@@ -76,11 +76,10 @@ export class VoteService {
         id: id,
       },
     });
-    if (findResult) {
-      return findResult;
-    } else {
+    if (!findResult) {
       throw new NotFoundException(`id: ${id} not found`);
     }
+    return findResult;
   }
 
   async getLeaderboardOfVote(voteId: bigint): Promise<LeaderboardResultDto[]> {

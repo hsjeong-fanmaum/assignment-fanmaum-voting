@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 
-export class AddUserResultDto {
+export class UserResultDto {
   id: bigint;
   loginId: string;
 

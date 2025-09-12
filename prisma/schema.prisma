@@ -19,7 +19,7 @@ model User {
   loginId    String      @unique @map("login_id") @db.VarChar(16)
   ///(암호화된) 비밀번호
   //48자 제한은 단순히 Bcrypt 결과 문자열의 길이를 예상해 작성한 것
-  password   String      @map("password") @db.VarChar(48)
+  password   String      @map("password") @db.VarChar(64)
   votingLogs VotingLog[]
 
   @@map("user")

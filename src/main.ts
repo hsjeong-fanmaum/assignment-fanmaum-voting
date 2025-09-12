@@ -35,6 +35,7 @@ async function bootstrap() {
         status: 500,
         description: 'Internal server error',
       })
+      .addBearerAuth()
       .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     //기존(입사 전 개인 프로젝트)에 사용하던 uri와 일치하도록 설정 변경했는데 괜찮을까요?

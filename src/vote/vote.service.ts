@@ -109,11 +109,13 @@ export class VoteService {
 
   //투표 실행(addVotingLog)
   async addVotingLog(
+    userId: bigint,
     voteId: bigint,
     starId: bigint,
   ): Promise<AddVotingLogResultDto> {
     return this.prisma.votingLog.create({
       data: {
+        userId: userId,
         voteId: voteId,
         starId: starId,
       },

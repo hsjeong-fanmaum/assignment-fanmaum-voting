@@ -5,6 +5,7 @@ export class SignupRequestDto {
   @ApiProperty()
   @IsString()
   loginId: string;
+
   @ApiProperty()
   @IsString()
   password: string;

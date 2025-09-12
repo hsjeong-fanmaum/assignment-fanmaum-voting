@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { VoteStatus } from './vote.enum';
-import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SearchVoteRequestDto {
@@ -19,7 +19,7 @@ export class SearchVoteRequestDto {
   //enum value를 string으로 해놔서 그런지 형변환 안 해도 잘 돌아가긴 하더라고요
   @ApiProperty({ enum: VoteStatus, enumName: 'VoteStatus', required: false })
   @IsOptional()
-  @IsIn(Object.keys(VoteStatus))
+  @IsEnum(VoteStatus)
   status?: VoteStatus;
 
   @ApiPropertyOptional()
@@ -39,9 +39,11 @@ export class AddVoteRequestDto {
   @ApiProperty()
   @IsString()
   name: string;
+
   @ApiProperty()
   @Type(() => Date)
   startedAt: Date;
+
   @ApiProperty()
   @Type(() => Date)
   endedAt: Date;

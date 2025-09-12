@@ -1,7 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
-import { LeaderboardResultDto, VoteResultDto } from './vote.response.dto';
+import {
+  AddVotingLogResultDto,
+  LeaderboardResultDto,
+  VoteResultDto,
+} from './vote.response.dto';
 import { VoteStatus } from './vote.enum';
 import { AddVoteRequestDto } from './vote.request.dto';
 
@@ -76,6 +80,7 @@ export class VoteService {
         id: id,
       },
     });
+
     if (!findResult) {
       throw new NotFoundException(`id: ${id} not found`);
     }
@@ -103,8 +108,11 @@ export class VoteService {
   }
 
   //투표 실행(addVotingLog)
-  async addVotingLog(voteId: bigint, starId: bigint): Promise<void> {
-    await this.prisma.votingLog.create({
+  async addVotingLog(
+    voteId: bigint,
+    starId: bigint,
+  ): Promise<AddVotingLogResultDto> {
+    return this.prisma.votingLog.create({
       data: {
         voteId: voteId,
         starId: starId,
@@ -114,8 +122,8 @@ export class VoteService {
   }
 
   // 테스트 시 데이터 삽입을 위한 로직
-  async addVote(addVoteDto: AddVoteRequestDto): Promise<void> {
-    await this.prisma.vote.create({
+  async addVote(addVoteDto: AddVoteRequestDto): Promise<VoteResultDto> {
+    return this.prisma.vote.create({
       data: addVoteDto,
     });
   }

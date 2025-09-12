@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { GetStarResultDto } from './star.response.dto';
+import { StarResultDto } from './star.response.dto';
 import { AddStarRequestDto } from './star.request.dto';
 
 @Injectable()
 export class StarService {
   constructor(private prisma: PrismaService) {}
 
-  async getStarById(id: bigint): Promise<GetStarResultDto> {
+  async getStarById(id: bigint): Promise<StarResultDto> {
     const findResult = await this.prisma.star.findUnique({
       select: {
         id: true,
@@ -18,13 +18,14 @@ export class StarService {
         id: id,
       },
     });
+
     if (!findResult) {
       throw new NotFoundException(`id: ${id} not found`);
     }
     return findResult;
   }
 
-  async searchStar(keyword?: string): Promise<GetStarResultDto[]> {
+  async searchStar(keyword?: string): Promise<StarResultDto[]> {
     return this.prisma.star.findMany({
       select: {
         id: true,
@@ -39,8 +40,8 @@ export class StarService {
   }
 
   // 테스트 시 데이터 삽입을 위한 로직
-  async addStar(addStarDto: AddStarRequestDto): Promise<void> {
-    await this.prisma.star.create({
+  async addStar(addStarDto: AddStarRequestDto): Promise<StarResultDto> {
+    return this.prisma.star.create({
       data: addStarDto,
     });
   }

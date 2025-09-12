@@ -5,6 +5,7 @@ export class AddStarRequestDto {
   @ApiProperty()
   @IsString()
   name: string;
+
   @ApiProperty()
   @IsOptional()
   @IsString()

@@ -20,7 +20,7 @@ import {
   SearchVoteRequestDto,
 } from './vote.request.dto';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
-import { User } from '../auth/user.decorator';
+import { User } from '../common/user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 

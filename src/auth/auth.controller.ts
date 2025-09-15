@@ -15,7 +15,7 @@ import { JwtTokenPayload } from './jwt.token.payload';
 import { LoginRequestDto } from './auth.request.dto';
 import { LoginResponseDto } from './auth.response.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { User } from './user.decorator';
+import { User } from '../common/user.decorator';
 import { UserService } from '../user/user.service';
 import { UserResultDto } from '../user/user.response.dto';
 import { SignupRequestDto } from '../user/user.request.dto';

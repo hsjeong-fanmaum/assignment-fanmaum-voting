@@ -1,15 +1,16 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
-import { Vote } from './vote.objecttype.dto';
+import { Args, ID, Query, Resolver } from '@nestjs/graphql';
+import { VoteDto } from './dto/vote.dto';
 import { VoteService } from './vote.service';
-import { VoteResultDto } from './vote.response.dto';
+import { VoteResultDto } from './dto/vote.response.dto';
+import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
 
-@Resolver(() => Vote)
+@Resolver(() => VoteDto)
 export class VoteResolver {
   constructor(private voteService: VoteService) {}
 
-  @Query(() => Vote)
+  @Query(() => VoteDto)
   async vote(
-    @Args('id', { type: () => Int }) id: bigint,
+    @Args('id', { type: () => ID }, ParseBigIntPipe) id: bigint,
   ): Promise<VoteResultDto> {
     return this.voteService.getVoteById(id);
   }

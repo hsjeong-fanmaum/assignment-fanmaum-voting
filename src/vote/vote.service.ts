@@ -5,9 +5,9 @@ import {
   AddVotingLogResultDto,
   LeaderboardResultDto,
   VoteResultDto,
-} from './vote.response.dto';
+} from './dto/vote.response.dto';
 import { VoteStatus } from './vote.enum';
-import { AddVoteRequestDto } from './vote.request.dto';
+import { AddVoteRequestDto } from './dto/vote.request.dto';
 
 @Injectable()
 export class VoteService {

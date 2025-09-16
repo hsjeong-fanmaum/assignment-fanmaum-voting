@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { VoteStatus } from './vote.enum';
+import { VoteStatus } from '../vote.enum';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 

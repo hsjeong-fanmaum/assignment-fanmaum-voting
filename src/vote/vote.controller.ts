@@ -13,12 +13,12 @@ import {
   AddVotingLogResultDto,
   LeaderboardResultDto,
   VoteResultDto,
-} from './vote.response.dto';
+} from './dto/vote.response.dto';
 import {
   AddVoteRequestDto,
   AddVotingLogRequestDto,
   SearchVoteRequestDto,
-} from './vote.request.dto';
+} from './dto/vote.request.dto';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
 import { User } from '../common/user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';

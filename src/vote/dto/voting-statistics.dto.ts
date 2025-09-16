@@ -5,7 +5,7 @@ import { StarDto } from '../../star/dto/star.dto';
 @ObjectType('VotingStatistics')
 export class VotingStatisticsDto {
   @Field(() => StarDto)
-  star: StarDto;
+  star?: StarDto;
 
   starId: bigint;
 

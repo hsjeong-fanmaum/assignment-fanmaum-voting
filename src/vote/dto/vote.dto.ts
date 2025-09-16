@@ -16,5 +16,5 @@ export class VoteDto {
   endedAt: Date;
 
   @Field(() => [VotingStatisticsDto])
-  votingStatistics: VotingStatisticsDto[];
+  votingStatistics?: VotingStatisticsDto[];
 }

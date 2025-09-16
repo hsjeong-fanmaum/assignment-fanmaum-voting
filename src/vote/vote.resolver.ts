@@ -8,7 +8,6 @@ import {
 } from '@nestjs/graphql';
 import { VoteDto } from './dto/vote.dto';
 import { VoteService } from './vote.service';
-import { VoteResultDto } from './dto/vote.response.dto';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
 import { VotingStatisticsDto } from './dto/voting-statistics.dto';
 
@@ -19,7 +18,7 @@ export class VoteResolver {
   @Query(() => VoteDto)
   async vote(
     @Args('id', { type: () => ID }, ParseBigIntPipe) id: bigint,
-  ): Promise<VoteResultDto> {
+  ): Promise<VoteDto> {
     return this.voteService.getVoteById(id);
   }
 

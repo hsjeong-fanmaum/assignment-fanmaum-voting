@@ -107,6 +107,16 @@ export class VoteService {
     });
   }
 
+  async getVoteCount(voteId: bigint, starId: bigint): Promise<number> {
+    return this.prisma.votingLog.count({
+      where: {
+        voteId: voteId,
+        starId: starId,
+        valid: true,
+      },
+    });
+  }
+
   //투표 실행(addVotingLog)
   async addVotingLog(
     userId: bigint,

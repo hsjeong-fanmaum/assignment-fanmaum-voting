@@ -1,8 +1,16 @@
-import { Args, ID, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  ID,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { VoteDto } from './dto/vote.dto';
 import { VoteService } from './vote.service';
 import { VoteResultDto } from './dto/vote.response.dto';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
+import { VotingStatisticsDto } from './dto/voting-statistics.dto';
 
 @Resolver(() => VoteDto)
 export class VoteResolver {
@@ -13,5 +21,20 @@ export class VoteResolver {
     @Args('id', { type: () => ID }, ParseBigIntPipe) id: bigint,
   ): Promise<VoteResultDto> {
     return this.voteService.getVoteById(id);
+  }
+
+  @ResolveField('votingStatistics', () => [VotingStatisticsDto])
+  async votingStatistics(
+    @Parent() vote: VoteDto,
+  ): Promise<VotingStatisticsDto[]> {
+    return (await this.voteService.getLeaderboardOfVote(vote.id)).map(
+      (statistics) =>
+        <VotingStatisticsDto>{
+          starId: statistics.starId,
+          vote: vote,
+          voteId: vote.id,
+          count: statistics._count.starId,
+        },
+    );
   }
 }

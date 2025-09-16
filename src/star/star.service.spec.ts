@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { StarService } from './star.service';
-import { StarResultDto } from './star.response.dto';
+import { StarResultDto } from './dto/star.response.dto';
 import { PrismaModule } from '../prisma/prisma.module';
 
 describe('StarService', () => {

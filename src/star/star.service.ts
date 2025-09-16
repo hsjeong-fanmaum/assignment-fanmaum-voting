@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { StarResultDto } from './star.response.dto';
-import { AddStarRequestDto } from './star.request.dto';
+import { StarResultDto } from './dto/star.response.dto';
+import { AddStarRequestDto } from './dto/star.request.dto';
 
 @Injectable()
 export class StarService {

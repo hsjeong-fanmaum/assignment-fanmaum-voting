@@ -3,10 +3,15 @@ import { VotingStatisticsDto } from './dto/voting-statistics.dto';
 import { VoteService } from './vote.service';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
 import { VoteDto } from './dto/vote.dto';
+import { StarDto } from '../star/dto/star.dto';
+import { StarService } from '../star/star.service';
 
 @Resolver(() => VotingStatisticsDto)
 export class VotingStatisticsResolver {
-  constructor(private voteService: VoteService) {}
+  constructor(
+    private voteService: VoteService,
+    private starService: StarService,
+  ) {}
 
   @Query(() => VotingStatisticsDto)
   async votingStatistics(
@@ -25,5 +30,12 @@ export class VotingStatisticsResolver {
     @Parent() votingStatistics: VotingStatisticsDto,
   ): Promise<VoteDto> {
     return <VoteDto>await this.voteService.getVoteById(votingStatistics.voteId);
+  }
+
+  @ResolveField('star', () => StarDto)
+  async star(
+    @Parent() votingStatistics: VotingStatisticsDto,
+  ): Promise<StarDto> {
+    return <StarDto>await this.starService.getStarById(votingStatistics.starId);
   }
 }

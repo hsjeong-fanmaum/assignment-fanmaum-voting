@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { StarService } from './star.service';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
-import { StarResultDto } from './star.response.dto';
+import { StarResultDto } from './dto/star.response.dto';
 import { ApiQuery } from '@nestjs/swagger';
-import { AddStarRequestDto } from './star.request.dto';
+import { AddStarRequestDto } from './dto/star.request.dto';
 
 @Controller('stars')
 export class StarController {

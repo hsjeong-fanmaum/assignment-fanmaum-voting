@@ -1,8 +1,12 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { VoteDto } from './vote.dto';
+import { StarDto } from '../../star/dto/star.dto';
 
 @ObjectType('VotingStatistics')
 export class VotingStatisticsDto {
+  @Field(() => StarDto)
+  star: StarDto;
+
   starId: bigint;
 
   @Field(() => VoteDto)

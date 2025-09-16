@@ -1,6 +1,7 @@
 import {
   Args,
   ID,
+  Int,
   Parent,
   Query,
   ResolveField,
@@ -20,6 +21,12 @@ export class VoteResolver {
     @Args('id', { type: () => ID }, ParseBigIntPipe) id: bigint,
   ): Promise<VoteDto> {
     return this.voteService.getVoteById(id);
+  }
+
+  // 왜 GraphQL은 BigInt를 지원하지 않는가
+  @ResolveField('id', () => Int)
+  voteId(@Parent() vote: VoteDto): number {
+    return Number(vote.id);
   }
 
   @ResolveField('votingStatistics', () => [VotingStatisticsDto])

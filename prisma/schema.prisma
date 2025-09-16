@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         BigInt      @id @default(autoincrement()) @map("id")
+  ///로그인용 ID (문자열)
+  loginId    String      @unique @map("login_id") @db.VarChar(16)
+  ///(암호화된) 비밀번호
+  //48자 제한은 단순히 Bcrypt 결과 문자열의 길이를 예상해 작성한 것
+  password   String      @map("password") @db.VarChar(64)
+  votingLogs VotingLog[]
+
+  @@map("user")
+}
+
+///1표를 말하는 게 아니라 투표(선거)를 말함.
+model Vote {
+  id         BigInt      @id @default(autoincrement()) @map("id")
+  //64자 제한은 다른 의도는 없고 적당히 큰 숫자임
+  name       String      @map("name") @db.VarChar(64)
+  startedAt  DateTime    @map("start_at") @db.DateTime(6)
+  endedAt    DateTime    @map("end_at") @db.DateTime(6)
+  votingLogs VotingLog[]
+
+  @@map("vote")
+}
+
+model Star {
+  id              BigInt      @id @default(autoincrement()) @map("id")
+  //근데 팬마음에 등장하는 연예인 중 영어 이름이 존재하긴 하나요? 없으면 글자수 제한을 4~5까지 줄여도 괜찮을 것 같습니다
+  name            String      @map("name") @db.VarChar(48)
+  ///S3에 있는 연예인의 이미지 링크를 생각해 만든 것
+  profileImageUrl String?     @map("profile_image_url") @db.VarChar(511)
+  votingLogs      VotingLog[]
+
+  @@map("star")
+}
+
+///투표 기록(1표를 행사한 기록)
+model VotingLog {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  userId    BigInt?  @map("user_id")
+  voteId    BigInt   @map("vote_id")
+  starId    BigInt   @map("star_id")
+  ///표가 살아있는지 확인(요구사항을 보니 표를 무효화할 필요도 있을 것 같아 추가)
+  valid     Boolean  @default(true) @map("valid")
+  ///반드시 투표를 진행한 시점이 됨
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  ///표가 살아있다면 투표를 진행한 시점, 투표를 취소했다면 취소한 시점
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(6)
+  user      User?    @relation(fields: [userId], references: [id])
+  vote      Vote     @relation(fields: [voteId], references: [id])
+  star      Star     @relation(fields: [starId], references: [id])
+
+  @@map("voting_log")
+}

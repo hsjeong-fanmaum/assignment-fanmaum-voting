@@ -5,6 +5,9 @@ import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
 import { VoteDto } from './dto/vote.dto';
 import { StarDto } from '../star/dto/star.dto';
 import { StarService } from '../star/star.service';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
+import { User } from '../common/user.decorator';
 
 @Resolver(() => VotingStatisticsDto)
 export class VotingStatisticsResolver {
@@ -40,11 +43,13 @@ export class VotingStatisticsResolver {
   }
 
   @Mutation(() => VotingStatisticsDto)
+  @UseGuards(AuthGuard)
   async addVotingLog(
+    @User('id') userId: bigint,
     @Args({ name: 'voteId', type: () => ID }, ParseBigIntPipe) voteId: bigint,
     @Args({ name: 'starId', type: () => ID }, ParseBigIntPipe) starId: bigint,
   ): Promise<VotingStatisticsDto> {
-    await this.voteService.addVotingLog(voteId, starId);
+    await this.voteService.addVotingLog(voteId, starId, userId);
     return this.votingStatistics(voteId, starId);
   }
 }

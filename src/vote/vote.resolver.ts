@@ -49,7 +49,6 @@ export class VoteResolver {
       (statistics) =>
         <VotingStatisticsDto>{
           starId: statistics.starId,
-          vote: vote,
           voteId: vote.id,
           count: statistics._count.starId,
         },

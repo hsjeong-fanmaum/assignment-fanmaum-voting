@@ -1,16 +1,8 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { VoteDto } from './vote.dto';
-import { StarDto } from '../../star/dto/star.dto';
 
 @ObjectType('VotingStatistics')
 export class VotingStatisticsDto {
-  @Field(() => StarDto)
-  star?: StarDto;
-
   starId: bigint;
-
-  @Field(() => VoteDto)
-  vote: VoteDto;
 
   // 없으면 vote를 fetch할 방법이 없음
   // 다만 프론트에 넘길 이유는 없으므로 Field로 처리하지 않음

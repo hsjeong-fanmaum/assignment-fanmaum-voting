@@ -1,5 +1,4 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { VotingStatisticsDto } from './voting-statistics.dto';
 
 @ObjectType('Vote')
 export class VoteDto {
@@ -14,7 +13,4 @@ export class VoteDto {
 
   @Field(() => Date)
   endedAt: Date;
-
-  @Field(() => [VotingStatisticsDto])
-  votingStatistics?: VotingStatisticsDto[];
 }

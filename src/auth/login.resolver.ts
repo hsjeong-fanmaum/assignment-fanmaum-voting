@@ -16,7 +16,7 @@ export class LoginResolver {
     @Args('loginId', { type: () => String }) loginId: string,
     @Args('password', { type: () => String }) password: string,
   ): Promise<LoginDto> {
-    return <LoginDto>{
+    return {
       ...(await this.authService.signIn(loginId, password)),
       loginId,
     };

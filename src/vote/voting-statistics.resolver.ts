@@ -1,13 +1,4 @@
-import {
-  Args,
-  ID,
-  Int,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, ID, Int, Mutation, Parent, Query, ResolveField, Resolver, } from '@nestjs/graphql';
 import { VotingStatisticsDto } from './dto/voting-statistics.dto';
 import { VoteService } from './vote.service';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
@@ -30,7 +21,7 @@ export class VotingStatisticsResolver {
     @Args('voteId', { type: () => Int }, ParseBigIntPipe) voteId: bigint,
     @Args('starId', { type: () => Int }, ParseBigIntPipe) starId: bigint,
   ): Promise<VotingStatisticsDto> {
-    return <VotingStatisticsDto>{
+    return {
       starId: starId,
       voteId: voteId,
       count: await this.voteService.getVoteCount(voteId, starId),
@@ -48,7 +39,7 @@ export class VotingStatisticsResolver {
   async star(
     @Parent() votingStatistics: VotingStatisticsDto,
   ): Promise<StarDto> {
-    return <StarDto>await this.starService.getStarById(votingStatistics.starId);
+    return await this.starService.getStarById(votingStatistics.starId);
   }
 
   @Mutation(() => VotingStatisticsDto)

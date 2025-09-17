@@ -1,4 +1,11 @@
-import { Args, Int, Mutation, Parent, ResolveField, Resolver, } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { UserDto } from './user.dto';
 import { UserService } from './user.service';
 import { VoteDto } from '../vote/dto/vote.dto';

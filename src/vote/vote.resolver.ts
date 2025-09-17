@@ -1,4 +1,12 @@
-import { Args, ID, Int, Parent, Query, ResolveField, Resolver, } from '@nestjs/graphql';
+import {
+  Args,
+  ID,
+  Int,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { VoteDto } from './dto/vote.dto';
 import { VoteService } from './vote.service';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';

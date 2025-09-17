@@ -1,4 +1,12 @@
-import { Args, ID, Int, Parent, Query, ResolveField, Resolver, } from '@nestjs/graphql';
+import {
+  Args,
+  ID,
+  Int,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { StarDto } from './dto/star.dto';
 import { StarService } from './star.service';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';

@@ -15,6 +15,7 @@ import { ApolloDriver } from '@nestjs/apollo';
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      fieldResolverEnhancers: ['guards', 'filters', 'interceptors'],
     }),
     VoteModule,
     PrismaModule,

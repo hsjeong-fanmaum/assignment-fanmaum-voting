@@ -2,8 +2,9 @@ import { Type } from 'class-transformer';
 import { VoteStatus } from '../vote.enum';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
-export class SearchVoteRequestDto {
+export class SearchVoteRestRequestDto {
   @Type(() => Number)
   @ApiPropertyOptional()
   @IsOptional()
@@ -22,6 +23,34 @@ export class SearchVoteRequestDto {
   @IsEnum(VoteStatus)
   status?: VoteStatus;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  search?: string;
+}
+
+@InputType('SearchVote')
+export class SearchVoteGraphqlRequestDto {
+  @Field(() => Int, { nullable: true })
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  page?: number;
+
+  @Field(() => Int, { nullable: true })
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  size?: number;
+
+  //enum value를 string으로 해놔서 그런지 형변환 안 해도 잘 돌아가긴 하더라고요
+  @Field(() => String, { nullable: true })
+  @ApiProperty({ enum: VoteStatus, enumName: 'VoteStatus', required: false })
+  @IsOptional()
+  @IsEnum(VoteStatus)
+  status?: VoteStatus;
+
+  @Field(() => String, { nullable: true })
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()

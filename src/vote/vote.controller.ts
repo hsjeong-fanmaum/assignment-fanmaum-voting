@@ -17,7 +17,7 @@ import {
 import {
   AddVoteRequestDto,
   AddVotingLogRequestDto,
-  SearchVoteRequestDto,
+  SearchVoteRestRequestDto,
 } from './dto/vote.request.dto';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
 import { User } from '../common/user.decorator';
@@ -31,7 +31,7 @@ export class VoteController {
   @Get('/')
   async searchVote(
     @Query()
-    { page, size, status, search }: SearchVoteRequestDto,
+    { page, size, status, search }: SearchVoteRestRequestDto,
   ): Promise<VoteResultDto[]> {
     return this.voteService.searchVote(page, size, status, search);
   }

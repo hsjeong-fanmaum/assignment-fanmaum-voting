@@ -1,16 +1,9 @@
-import {
-  Args,
-  ID,
-  Int,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, ID, Int, Parent, Query, ResolveField, Resolver, } from '@nestjs/graphql';
 import { VoteDto } from './dto/vote.dto';
 import { VoteService } from './vote.service';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
 import { VotingStatisticsDto } from './dto/voting-statistics.dto';
+import { SearchVoteGraphqlRequestDto } from './dto/vote.request.dto';
 
 @Resolver(() => VoteDto)
 export class VoteResolver {
@@ -21,6 +14,17 @@ export class VoteResolver {
     @Args('id', { type: () => ID }, ParseBigIntPipe) id: bigint,
   ): Promise<VoteDto> {
     return this.voteService.getVoteById(id);
+  }
+
+  @Query(() => [VoteDto])
+  async searchVote(
+    @Args('options', {
+      type: () => SearchVoteGraphqlRequestDto,
+      nullable: true,
+    })
+    { page, size, status, search }: SearchVoteGraphqlRequestDto,
+  ): Promise<VoteDto[]> {
+    return this.voteService.searchVote(page, size, status, search);
   }
 
   // 왜 GraphQL은 BigInt를 지원하지 않는가

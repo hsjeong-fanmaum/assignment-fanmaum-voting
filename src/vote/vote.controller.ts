@@ -59,7 +59,7 @@ export class VoteController {
     @Param('voteId', ParseBigIntPipe) voteId: bigint,
     @Body() { starId }: AddVotingLogRequestDto,
   ): Promise<AddVotingLogResultDto> {
-    return this.voteService.addVotingLog(userId, voteId, starId);
+    return this.voteService.addVotingLog(voteId, starId, userId);
   }
 
   // 테스트 시 데이터 삽입을 위한 API

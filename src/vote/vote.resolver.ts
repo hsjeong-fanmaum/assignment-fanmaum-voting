@@ -1,4 +1,11 @@
-import { Args, ID, Int, Parent, Query, ResolveField, Resolver, } from '@nestjs/graphql';
+import {
+  Args,
+  ID,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { VoteDto } from './dto/vote.dto';
 import { VoteService } from './vote.service';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
@@ -28,9 +35,9 @@ export class VoteResolver {
   }
 
   // 왜 GraphQL은 BigInt를 지원하지 않는가
-  @ResolveField('id', () => Int)
-  voteId(@Parent() vote: VoteDto): number {
-    return Number(vote.id);
+  @ResolveField('id', () => ID)
+  voteId(@Parent() vote: VoteDto): string {
+    return String(vote.id);
   }
 
   @ResolveField('votingStatistics', () => [VotingStatisticsDto])

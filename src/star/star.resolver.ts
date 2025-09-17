@@ -1,7 +1,6 @@
 import {
   Args,
   ID,
-  Int,
   Parent,
   Query,
   ResolveField,
@@ -30,8 +29,8 @@ export class StarResolver {
   }
 
   // 왜 GraphQL은 BigInt를 지원하지 않는가
-  @ResolveField('id', () => Int)
-  starId(@Parent() star: StarDto): number {
-    return Number(star.id);
+  @ResolveField('id', () => ID)
+  starId(@Parent() star: StarDto): string {
+    return String(star.id);
   }
 }

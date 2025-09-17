@@ -1,6 +1,6 @@
 import {
   Args,
-  Int,
+  ID,
   Mutation,
   Parent,
   ResolveField,
@@ -8,7 +8,6 @@ import {
 } from '@nestjs/graphql';
 import { UserDto } from './user.dto';
 import { UserService } from './user.service';
-import { VoteDto } from '../vote/dto/vote.dto';
 
 @Resolver(() => UserDto)
 export class UserResolver {
@@ -24,8 +23,8 @@ export class UserResolver {
   }
 
   // 왜 GraphQL은 BigInt를 지원하지 않는가
-  @ResolveField('id', () => Int)
-  voteId(@Parent() vote: VoteDto): number {
-    return Number(vote.id);
+  @ResolveField('id', () => ID)
+  userId(@Parent() vote: UserDto): string {
+    return String(vote.id);
   }
 }

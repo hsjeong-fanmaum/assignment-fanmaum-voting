@@ -43,8 +43,7 @@ export class SearchVoteGraphqlRequestDto {
   @IsNumber()
   size?: number;
 
-  //enum value를 string으로 해놔서 그런지 형변환 안 해도 잘 돌아가긴 하더라고요
-  @Field(() => String, { nullable: true })
+  @Field(() => VoteStatus, { nullable: true })
   @ApiProperty({ enum: VoteStatus, enumName: 'VoteStatus', required: false })
   @IsOptional()
   @IsEnum(VoteStatus)

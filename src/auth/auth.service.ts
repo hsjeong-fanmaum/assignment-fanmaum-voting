@@ -25,7 +25,7 @@ export class AuthService {
       throw new NotFoundException(`id: ${loginId} not found`);
     }
 
-    return <LoginResponseDto>{
+    return {
       accessToken: await this.jwtService.signAsync(userWithoutPassword),
     };
   }

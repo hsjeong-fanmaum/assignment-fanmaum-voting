@@ -21,7 +21,7 @@ describe('StarService', () => {
 
   it('get star by id test', async () => {
     for (let i: number = 1; i <= 3; i++) {
-      expect(await service.getStarById(BigInt(i))).toEqual(<StarResultDto>{
+      expect(await service.getStarById(BigInt(i))).toEqual({
         id: BigInt(i),
         name: 'star' + i,
         profileImageUrl: 'image' + i,
@@ -30,18 +30,18 @@ describe('StarService', () => {
   });
 
   it('star search test', async () => {
-    const allStarResult = <StarResultDto[]>[
-      <StarResultDto>{
+    const allStarResult: StarResultDto[] = [
+      {
         id: BigInt(1),
         name: 'star' + 1,
         profileImageUrl: 'image' + 1,
       },
-      <StarResultDto>{
+      {
         id: BigInt(2),
         name: 'star' + 2,
         profileImageUrl: 'image' + 2,
       },
-      <StarResultDto>{
+      {
         id: BigInt(3),
         name: 'star' + 3,
         profileImageUrl: 'image' + 3,

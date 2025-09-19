@@ -1,9 +1,10 @@
 import { Type } from 'class-transformer';
-import { VoteStatus } from './vote.enum';
+import { VoteStatus } from '../vote.enum';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
-export class SearchVoteRequestDto {
+export class SearchVoteRestRequestDto {
   @Type(() => Number)
   @ApiPropertyOptional()
   @IsOptional()
@@ -22,6 +23,33 @@ export class SearchVoteRequestDto {
   @IsEnum(VoteStatus)
   status?: VoteStatus;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  search?: string;
+}
+
+@InputType('SearchVote')
+export class SearchVoteGraphqlRequestDto {
+  @Field(() => Int, { nullable: true })
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  page?: number;
+
+  @Field(() => Int, { nullable: true })
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  size?: number;
+
+  @Field(() => VoteStatus, { nullable: true })
+  @ApiProperty({ enum: VoteStatus, enumName: 'VoteStatus', required: false })
+  @IsOptional()
+  @IsEnum(VoteStatus)
+  status?: VoteStatus;
+
+  @Field(() => String, { nullable: true })
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()

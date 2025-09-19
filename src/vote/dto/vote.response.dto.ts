@@ -6,7 +6,7 @@ export class VoteResultDto {
 }
 
 export class LeaderboardResultDto {
-  _count: { id: number };
+  _count: { starId: number };
   starId: bigint;
 }
 

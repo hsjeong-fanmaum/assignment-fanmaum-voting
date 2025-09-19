@@ -9,6 +9,8 @@ describe('AuthService', () => {
   beforeEach(async () => {
     //main.ts에 있는 게 테스트 코드에는 적용이 안 되네요
     BigInt.prototype['toJSON'] = function () {
+      // 이 type 단언은 진행하지 않으면 this를 any 타입으로 취급해 에러가 발생합니다.
+      // typeof this 확인을 통해 해결할 수는 있습니다. 이를 희망하신다면 수정하겠습니다.
       return (<bigint>this).toString();
     };
 

@@ -7,9 +7,16 @@ import { CommonModule } from './common/common.module';
 import { StarModule } from './star/star.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver } from '@nestjs/apollo';
 
 @Module({
   imports: [
+    GraphQLModule.forRoot({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      fieldResolverEnhancers: ['guards', 'filters', 'interceptors'],
+    }),
     VoteModule,
     PrismaModule,
     CommonModule,

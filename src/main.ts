@@ -14,8 +14,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   if (process.env.NODE_ENV !== 'prod') {
-    const swaggerUser = <string>process.env.SWAGGER_USER;
-    const swaggerPassword = <string>process.env.SWAGGER_PASSWORD;
+    const swaggerUser = process.env.SWAGGER_USER!;
+    const swaggerPassword = process.env.SWAGGER_PASSWORD!;
     app.use(
       ['/swagger.html'], // '/' 없으면 작동하지 않음, 안 붙였다 30분 날렸습니다
       expressBasicAuth({

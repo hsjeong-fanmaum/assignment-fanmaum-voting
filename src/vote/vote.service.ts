@@ -5,9 +5,9 @@ import {
   AddVotingLogResultDto,
   LeaderboardResultDto,
   VoteResultDto,
-} from './vote.response.dto';
+} from './dto/vote.response.dto';
 import { VoteStatus } from './vote.enum';
-import { AddVoteRequestDto } from './vote.request.dto';
+import { AddVoteRequestDto } from './dto/vote.request.dto';
 
 @Injectable()
 export class VoteService {
@@ -88,6 +88,10 @@ export class VoteService {
   }
 
   async getLeaderboardOfVote(voteId: bigint): Promise<LeaderboardResultDto[]> {
+    // 이 부분은 저번에도 제가 리뷰 단 적 있고 slack에도 질문한 적 있는 부분입니다. 파트장님의 답변은 아직 없는 것으로 알고 있습니다.
+    // 그때 은행님에게 이건 제 코드의 문제가 아니라 webstorm의 문제라는 답변을 받아 이렇게 진행하고 있었습니다.
+    // Slack에 말씀드린 것처럼 동작은 문제없이 됩니다.
+    // 혹시 권장하시는 진행 방향이 따로 있나요?
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     return this.prisma.votingLog.groupBy({
@@ -107,11 +111,21 @@ export class VoteService {
     });
   }
 
+  async getVoteCount(voteId: bigint, starId: bigint): Promise<number> {
+    return this.prisma.votingLog.count({
+      where: {
+        voteId: voteId,
+        starId: starId,
+        valid: true,
+      },
+    });
+  }
+
   //투표 실행(addVotingLog)
   async addVotingLog(
-    userId: bigint,
     voteId: bigint,
     starId: bigint,
+    userId?: bigint,
   ): Promise<AddVotingLogResultDto> {
     return this.prisma.votingLog.create({
       data: {

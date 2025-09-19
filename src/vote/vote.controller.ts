@@ -13,12 +13,12 @@ import {
   AddVotingLogResultDto,
   LeaderboardResultDto,
   VoteResultDto,
-} from './vote.response.dto';
+} from './dto/vote.response.dto';
 import {
   AddVoteRequestDto,
   AddVotingLogRequestDto,
-  SearchVoteRequestDto,
-} from './vote.request.dto';
+  SearchVoteRestRequestDto,
+} from './dto/vote.request.dto';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
 import { User } from '../common/user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -31,7 +31,7 @@ export class VoteController {
   @Get('/')
   async searchVote(
     @Query()
-    { page, size, status, search }: SearchVoteRequestDto,
+    { page, size, status, search }: SearchVoteRestRequestDto,
   ): Promise<VoteResultDto[]> {
     return this.voteService.searchVote(page, size, status, search);
   }
@@ -59,7 +59,7 @@ export class VoteController {
     @Param('voteId', ParseBigIntPipe) voteId: bigint,
     @Body() { starId }: AddVotingLogRequestDto,
   ): Promise<AddVotingLogResultDto> {
-    return this.voteService.addVotingLog(userId, voteId, starId);
+    return this.voteService.addVotingLog(voteId, starId, userId);
   }
 
   // 테스트 시 데이터 삽입을 위한 API

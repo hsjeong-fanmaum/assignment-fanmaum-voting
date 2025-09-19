@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { UserResultDto } from '../user/user.response.dto';
+import { UserResultDto } from '../user/dto/user.response.dto';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { LoginResponseDto } from './dto/auth.response.dto';
@@ -25,8 +25,11 @@ export class AuthService {
       throw new NotFoundException(`id: ${loginId} not found`);
     }
 
+    const accessToken: string =
+      await this.jwtService.signAsync(userWithoutPassword);
+
     return {
-      accessToken: await this.jwtService.signAsync(userWithoutPassword),
+      accessToken,
     };
   }
 }

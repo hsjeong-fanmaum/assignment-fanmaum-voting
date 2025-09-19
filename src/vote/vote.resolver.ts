@@ -11,6 +11,7 @@ import { VoteService } from './vote.service';
 import { ParseBigIntPipe } from '../common/parse-big-int.pipe';
 import { VotingStatisticsDto } from './dto/voting-statistics.dto';
 import { SearchVoteGraphqlRequestDto } from './dto/vote.request.dto';
+import { LeaderboardResultDto } from './dto/vote.response.dto';
 
 @Resolver(() => VoteDto)
 export class VoteResolver {
@@ -44,7 +45,8 @@ export class VoteResolver {
   async votingStatistics(
     @Parent() vote: VoteDto,
   ): Promise<VotingStatisticsDto[]> {
-    const queryResult = await this.voteService.getLeaderboardOfVote(vote.id);
+    const queryResult: LeaderboardResultDto[] =
+      await this.voteService.getLeaderboardOfVote(vote.id);
     return queryResult.map((statistics) => {
       return {
         starId: statistics.starId,

@@ -8,7 +8,7 @@ export class StarService {
   constructor(private prisma: PrismaService) {}
 
   async getStarById(id: bigint): Promise<StarResultDto> {
-    const findResult = await this.prisma.star.findUnique({
+    const findResult: StarResultDto | null = await this.prisma.star.findUnique({
       select: {
         id: true,
         name: true,

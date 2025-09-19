@@ -2,7 +2,7 @@ import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
-import { UserDto } from '../user/user.dto';
+import { UserDto } from '../user/dto/user.dto';
 import { LoginResponseDto } from './dto/auth.response.dto';
 
 @Resolver(() => LoginDto)
@@ -17,11 +17,11 @@ export class LoginResolver {
     @Args('loginId', { type: () => String }) loginId: string,
     @Args('password', { type: () => String }) password: string,
   ): Promise<LoginDto> {
-    // TODO: 변수명 적절한지 확인 필요
     const signInResult: LoginResponseDto = await this.authService.signIn(
       loginId,
       password,
     );
+
     return {
       ...signInResult,
       loginId,
